@@ -2,8 +2,6 @@ package net.unesc.crypto.invest;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class Investimento {
 
@@ -21,6 +19,10 @@ public class Investimento {
 
     public BigDecimal getValorInicial() {
         return valorInicial;
+    }
+
+    public BigDecimal getValorMes(YearMonth inicioInvestimento,  YearMonth mes) {
+        return moeda.getValorMes(valorInicial, inicioInvestimento, mes);
     }
 
     @Override

@@ -8,7 +8,9 @@ import net.dongliu.gson.GsonJava8TypeAdapterFactory;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Aplicacao implements Runnable {
@@ -49,6 +51,9 @@ public class Aplicacao implements Runnable {
                     case "3":
                         addInvestimento(reader);
                         break;
+                    case "4":
+                        analizeCarteira(reader);
+                        break;
                     case "x":
                         System.out.println("Tchau!");
                         return;
@@ -59,6 +64,42 @@ public class Aplicacao implements Runnable {
             }
         } catch (IOException e) {
             System.out.println("Falha ao ler a entrada do usuário");
+        }
+    }
+
+    private void analizeCarteira(BufferedReader reader) throws IOException {
+        for (CarteiraInvestimento carteiraInvestimento: carteiras) {
+            int linhas = carteiraInvestimento.getInvestimentos().size();
+
+            BigDecimal[][] investimentoMeses = new BigDecimal[linhas][12];
+
+            YearMonth inicioInvestimento = YearMonth.now().minusMonths(12);
+            YearMonth mes = inicioInvestimento;
+            for(int i = 0; i < 12; i++) {
+                List<Investimento> investimentos = carteiraInvestimento.getInvestimentos();
+                for (int posicaoInvestimento = 0; posicaoInvestimento < investimentos.size(); posicaoInvestimento++) {
+                    Investimento investimento = investimentos.get(posicaoInvestimento);
+                    investimentoMeses[posicaoInvestimento][i] = investimento.getValorMes(inicioInvestimento, mes);
+                }
+                mes = mes.plusMonths(1);
+            }
+
+            imprimeMatriz(investimentoMeses);
+        }
+    }
+
+    private void imprimeMatriz(BigDecimal[][] investimentoMeses) {
+        for (int i = 11; i >= 0; i--) {
+            System.out.print(YearMonth.now().minusMonths(i) + "\t\t");
+        }
+        System.out.println();
+
+        for (int i = 0; i < investimentoMeses.length; i++) {
+            for (int j = 0; j < 12; j++) {
+                System.out.print(investimentoMeses[i][j].setScale(4, BigDecimal.ROUND_HALF_EVEN) + "\t");
+            }
+
+            System.out.println();
         }
     }
 
@@ -114,6 +155,7 @@ public class Aplicacao implements Runnable {
         System.out.println("\t1 - Adicionar carteira");
         System.out.println("\t2 - Consultar carteiras");
         System.out.println("\t3 - Novo investimento");
+        System.out.println("\t4 - Analize da carteira");
         System.out.println("\tX - Para sair");
     }
 
