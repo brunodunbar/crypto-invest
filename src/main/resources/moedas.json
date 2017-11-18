@@ -1,0 +1,15 @@
+[
+  {
+    "nome": "bitcoin",
+    "valorCompra": 25000.00,
+    "variacaoPorMes": {
+      "2015-08": 100,
+      "2015-09": -10,
+      "2015-10": 50
+    }
+  },
+  {
+    "nome": "ethereum",
+    "valorCompra": 1000.00
+  }
+]
